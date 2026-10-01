@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  --color-bg: #ffffff;
+  --color-text: #161616;
+  --color-muted: #666666;
+  --color-border: #e5e5e5;
+  --color-accent: #e87524;
+  --color-accent-light: #fff4ec;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #ffffff;
+  color: #161616;
+  font-family: "DM Sans", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: #e87524;
+  color: #ffffff;
+}
+
+.font-mono {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+html {
+  scroll-snap-type: y proximity;
+  scroll-behavior: smooth;
+}
