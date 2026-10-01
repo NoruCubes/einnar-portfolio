@@ -30,65 +30,108 @@ function getResponse(message) {
     contact,
   } = portfolioData;
 
-  // Profile
+  // --------------------------------
+  // Profile / About
+  // --------------------------------
   if (
     normalized.includes("who") ||
     normalized.includes("einnar") ||
     normalized.includes("about")
   ) {
-    return `${profile.name} is a ${profile.title} based in ${profile.location}. ${profile.summary}`;
+    return {
+      text: `${profile.name} is a ${profile.title} based in ${profile.location}. ${profile.summary}`,
+      action: {
+        label: "View About",
+        target: "#about",
+      },
+    };
   }
 
+  // --------------------------------
   // Experience
+  // --------------------------------
   if (
     normalized.includes("experience") ||
-    normalized.includes("work") ||
     normalized.includes("career") ||
-    normalized.includes("worked")
+    normalized.includes("worked") ||
+    normalized.includes("work")
   ) {
     if (!experience.length) {
-      return "There is currently no professional experience information available.";
+      return {
+        text:
+          "There is currently no professional experience information available.",
+      };
     }
 
     const companies = experience
       .map((item) => `${item.company} (${item.role})`)
       .join(", ");
 
-    return `Einnar has professional experience across ${companies}. His work includes construction monitoring, site inspections, project monitoring, quantity take-offs, cost estimation, and project reporting.`;
+    return {
+      text: `Einnar has professional experience across ${companies}. His work includes construction monitoring, site inspections, project monitoring, quantity take-offs, cost estimation, and project reporting.`,
+      action: {
+        label: "View Experience",
+        target: "#experience",
+      },
+    };
   }
 
-  // Training
+  // --------------------------------
+  // Training / Certifications
+  // --------------------------------
   if (
     normalized.includes("training") ||
     normalized.includes("certification") ||
     normalized.includes("certificate")
   ) {
     if (!training.length) {
-      return "There is currently no training information available.";
+      return {
+        text:
+          "There is currently no training information available.",
+      };
     }
 
     const trainingList = training
       .map((item) => item.title)
       .join(", ");
 
-    return `Einnar's training includes ${trainingList}. These cover areas such as construction estimating, quantity take-offs, project scheduling, digital plan analysis, and cost management.`;
+    return {
+      text: `Einnar's training includes ${trainingList}. These cover areas such as construction estimating, quantity take-offs, project scheduling, digital plan analysis, and cost management.`,
+      action: {
+        label: "View Training",
+        target: "#certifications",
+      },
+    };
   }
 
+  // --------------------------------
   // Projects
+  // --------------------------------
   if (
     normalized.includes("project") ||
     normalized.includes("projects")
   ) {
     if (!projects.length) {
-      return "Project information is currently being prepared. More projects will be added once the portfolio content is finalized.";
+      return {
+        text:
+          "Project information is currently being prepared. More projects will be added once the portfolio content is finalized.",
+      };
     }
 
-    return `Einnar has ${
-      projects.length
-    } project${projects.length > 1 ? "s" : ""} featured in his portfolio. You can explore them through the Projects section.`;
+    return {
+      text: `Einnar has ${
+        projects.length
+      } project${projects.length > 1 ? "s" : ""} featured in his portfolio. You can explore them through the Projects section.`,
+      action: {
+        label: "View Projects",
+        target: "#projects",
+      },
+    };
   }
 
+  // --------------------------------
   // Contact
+  // --------------------------------
   if (
     normalized.includes("contact") ||
     normalized.includes("email") ||
@@ -96,32 +139,59 @@ function getResponse(message) {
     normalized.includes("linkedin") ||
     normalized.includes("reach")
   ) {
-    return `You can contact Einnar through the Contact section. His current location is ${contact.location}, and his portfolio also provides his email, phone, and LinkedIn information.`;
+    return {
+      text: `You can contact Einnar through the Contact section. His current location is ${contact.location}, and his portfolio also provides his email, phone, and LinkedIn information.`,
+      action: {
+        label: "Contact Einnar",
+        target: "#contact",
+      },
+    };
   }
 
-  // Skills / focus
+  // --------------------------------
+  // Skills / Focus
+  // --------------------------------
   if (
     normalized.includes("skill") ||
     normalized.includes("skills") ||
     normalized.includes("special") ||
     normalized.includes("focus")
   ) {
-    return `Einnar's professional focus includes ${profile.focus.join(
-      ", "
-    )}.`;
+    return {
+      text: `Einnar's professional focus includes ${profile.focus.join(
+        ", "
+      )}.`,
+      action: {
+        label: "View About",
+        target: "#about",
+      },
+    };
   }
 
+  // --------------------------------
   // Location
+  // --------------------------------
   if (
     normalized.includes("where") ||
     normalized.includes("location") ||
     normalized.includes("based")
   ) {
-    return `Einnar is based in ${profile.location}.`;
+    return {
+      text: `Einnar is based in ${profile.location}.`,
+      action: {
+        label: "View About",
+        target: "#about",
+      },
+    };
   }
 
+  // --------------------------------
   // Fallback
-  return "I can help you learn more about Einnar's profile, experience, training, projects, professional focus, and contact information. Try asking about one of those topics.";
+  // --------------------------------
+  return {
+    text:
+      "I can help you learn more about Einnar's profile, experience, training, projects, professional focus, and contact information. Try asking about one of those topics.",
+  };
 }
 
 export default function Chatbot() {
@@ -136,21 +206,45 @@ export default function Chatbot() {
     },
   ]);
 
+  // --------------------------------
+  // Navigate to portfolio section
+  // --------------------------------
+  const navigateToSection = (target) => {
+    const element = document.querySelector(target);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+
+    setIsOpen(false);
+  };
+
+  // --------------------------------
+  // Send message
+  // --------------------------------
   const sendMessage = (text = message) => {
     const trimmedMessage = text.trim();
 
     if (!trimmedMessage) return;
 
+    const timestamp = Date.now();
+
+    const response = getResponse(trimmedMessage);
+
     const userMessage = {
-      id: Date.now(),
+      id: timestamp,
       sender: "user",
       text: trimmedMessage,
     };
 
     const botMessage = {
-      id: Date.now() + 1,
+      id: timestamp + 1,
       sender: "bot",
-      text: getResponse(trimmedMessage),
+      text: response.text,
+      action: response.action,
     };
 
     setMessages((current) => [
@@ -164,7 +258,9 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Floating launcher */}
+      {/* =========================================
+          Floating Launcher
+      ========================================= */}
       <motion.button
         type="button"
         onClick={() => setIsOpen((current) => !current)}
@@ -181,26 +277,52 @@ export default function Chatbot() {
           {isOpen ? (
             <motion.div
               key="close"
-              initial={{ opacity: 0, rotate: -45 }}
-              animate={{ opacity: 1, rotate: 0 }}
-              exit={{ opacity: 0, rotate: 45 }}
+              initial={{
+                opacity: 0,
+                rotate: -45,
+              }}
+              animate={{
+                opacity: 1,
+                rotate: 0,
+              }}
+              exit={{
+                opacity: 0,
+                rotate: 45,
+              }}
             >
-              <X size={20} strokeWidth={1.5} />
+              <X
+                size={20}
+                strokeWidth={1.5}
+              />
             </motion.div>
           ) : (
             <motion.div
               key="bot"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
+              initial={{
+                opacity: 0,
+                scale: 0.8,
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+              }}
+              exit={{
+                opacity: 0,
+                scale: 0.8,
+              }}
             >
-              <Bot size={20} strokeWidth={1.5} />
+              <Bot
+                size={20}
+                strokeWidth={1.5}
+              />
             </motion.div>
           )}
         </AnimatePresence>
       </motion.button>
 
-      {/* Chat window */}
+      {/* =========================================
+          Chat Window
+      ========================================= */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -225,11 +347,19 @@ export default function Chatbot() {
             }}
             className="fixed bottom-24 right-6 z-[60] flex h-[520px] w-[360px] max-w-[calc(100vw-32px)] flex-col overflow-hidden border border-black/10 bg-white shadow-2xl shadow-black/10"
           >
-            {/* Header */}
+
+            {/* =====================================
+                Header
+            ===================================== */}
             <div className="flex items-center justify-between bg-[#e87524] px-5 py-4 text-white">
+
               <div className="flex items-center gap-3">
+
                 <div className="flex h-9 w-9 items-center justify-center bg-white text-[#e87524]">
-                  <Bot size={17} strokeWidth={1.5} />
+                  <Bot
+                    size={17}
+                    strokeWidth={1.5}
+                  />
                 </div>
 
                 <div>
@@ -241,6 +371,7 @@ export default function Chatbot() {
                     Portfolio Information
                   </p>
                 </div>
+
               </div>
 
               <button
@@ -254,9 +385,12 @@ export default function Chatbot() {
                   strokeWidth={1.4}
                 />
               </button>
+
             </div>
 
-            {/* Messages */}
+            {/* =====================================
+                Messages
+            ===================================== */}
             <div className="relative flex-1 overflow-y-auto px-4 py-5">
 
               {/* Technical grid */}
@@ -294,18 +428,51 @@ export default function Chatbot() {
                     }`}
                   >
                     <div
-                      className={`max-w-[85%] px-4 py-3 text-sm leading-6 ${
+                      className={`max-w-[85%] ${
                         item.sender === "user"
                           ? "bg-[#e87524] text-white"
                           : "border border-black/10 bg-white text-black/70"
                       }`}
                     >
-                      {item.text}
+
+                      {/* Message */}
+                      <div className="px-4 py-3 text-sm leading-6">
+                        {item.text}
+                      </div>
+
+                      {/* Navigation action */}
+                      {item.sender === "bot" &&
+                        item.action && (
+                          <div className="px-4 pb-3">
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                navigateToSection(
+                                  item.action.target
+                                )
+                              }
+                              className="group flex items-center gap-2 border border-black/10 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-black/55 transition-all duration-300 hover:border-[#e87524] hover:bg-[#e87524] hover:text-white"
+                            >
+                              {item.action.label}
+
+                              <ArrowUpRight
+                                size={12}
+                                strokeWidth={1.4}
+                                className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                              />
+                            </button>
+
+                          </div>
+                        )}
+
                     </div>
                   </div>
                 ))}
 
-                {/* Suggested Questions */}
+                {/* =================================
+                    Suggested Questions
+                ================================= */}
                 {messages.length === 1 && (
                   <div className="pt-2">
 
@@ -314,16 +481,22 @@ export default function Chatbot() {
                     </p>
 
                     <div className="flex flex-col gap-2">
-                      {suggestedQuestions.map((question) => (
-                        <button
-                          key={question}
-                          type="button"
-                          onClick={() => sendMessage(question)}
-                          className="w-fit max-w-full border border-black/10 bg-white px-3 py-2 text-left text-xs text-black/60 transition-all duration-300 hover:border-[#e87524] hover:bg-[#e87524] hover:text-white"
-                        >
-                          {question}
-                        </button>
-                      ))}
+
+                      {suggestedQuestions.map(
+                        (question) => (
+                          <button
+                            key={question}
+                            type="button"
+                            onClick={() =>
+                              sendMessage(question)
+                            }
+                            className="w-fit max-w-full border border-black/10 bg-white px-3 py-2 text-left text-xs text-black/60 transition-all duration-300 hover:border-[#e87524] hover:bg-[#e87524] hover:text-white"
+                          >
+                            {question}
+                          </button>
+                        )
+                      )}
+
                     </div>
 
                   </div>
@@ -332,7 +505,9 @@ export default function Chatbot() {
               </div>
             </div>
 
-            {/* Input */}
+            {/* =====================================
+                Input
+            ===================================== */}
             <form
               onSubmit={(event) => {
                 event.preventDefault();
@@ -340,10 +515,13 @@ export default function Chatbot() {
               }}
               className="flex border-t border-black/10 bg-white"
             >
+
               <input
                 type="text"
                 value={message}
-                onChange={(event) => setMessage(event.target.value)}
+                onChange={(event) =>
+                  setMessage(event.target.value)
+                }
                 placeholder="Ask about Einnar..."
                 className="min-w-0 flex-1 bg-transparent px-4 py-4 text-sm text-black outline-none placeholder:text-black/25"
               />
@@ -358,10 +536,14 @@ export default function Chatbot() {
                   strokeWidth={1.4}
                 />
               </button>
+
             </form>
 
-            {/* Footer */}
+            {/* =====================================
+                Footer
+            ===================================== */}
             <div className="flex items-center justify-between border-t border-black/10 px-4 py-2">
+
               <span className="font-mono text-[7px] uppercase tracking-[0.18em] text-black/25">
                 Engineering With Purpose
               </span>
@@ -379,7 +561,9 @@ export default function Chatbot() {
                   className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                 />
               </a>
+
             </div>
+
           </motion.div>
         )}
       </AnimatePresence>
