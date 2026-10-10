@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> feature/chatbot-navigation
 import { useEffect, useState } from "react";
 import TechnicalGrid from "../components/TechnicalGrid";
 import { AnimatePresence, motion } from "framer-motion";
