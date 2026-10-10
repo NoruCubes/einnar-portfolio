@@ -5,11 +5,11 @@ import { ArrowUpRight } from "lucide-react";
 const projects = [
   {
     number: "01",
-    title: "Project Name",
-    category: "Construction / Engineering",
+    title: "Perimeter Electric Fence Installation",
+    category: "Feasibility Study, Cost Analysis",
     year: "2026",
     description:
-      "Project description will go here. This section can describe the scope of work, engineering responsibilities, project objectives, and key contributions.",
+      "Conducted a feasibility study and prepared the Terms of Reference (TOR) for the proposed installation of an electric fence around the entire property. Evaluated layout options, project costs, technical requirements, safety considerations, and implementation feasibility to determine the most practical and cost-effective solution for the property.",
     image: null,
   },
   {

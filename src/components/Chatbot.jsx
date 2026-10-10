@@ -30,13 +30,34 @@ function getResponse(message) {
     contact,
   } = portfolioData;
 
-  // --------------------------------
-  // Profile / About
-  // --------------------------------
+  // ========================================
+  // GREETING
+  // ========================================
   if (
-    normalized.includes("who") ||
-    normalized.includes("einnar") ||
-    normalized.includes("about")
+    normalized === "hi" ||
+    normalized === "hello" ||
+    normalized === "hey" ||
+    normalized.includes("good morning") ||
+    normalized.includes("good afternoon") ||
+    normalized.includes("good evening")
+  ) {
+    return {
+      text: `Hello! I'm Einnar's portfolio assistant. I can tell you about his background, experience, training, professional focus, projects, or contact information.`,
+    };
+  }
+
+  // ========================================
+  // ABOUT / PROFILE
+  // ========================================
+  if (
+    normalized.includes("who is einnar") ||
+    normalized.includes("who is he") ||
+    normalized.includes("tell me about einnar") ||
+    normalized.includes("tell me about him") ||
+    normalized.includes("about einnar") ||
+    normalized === "about" ||
+    normalized.includes("background") ||
+    normalized.includes("profile")
   ) {
     return {
       text: `${profile.name} is a ${profile.title} based in ${profile.location}. ${profile.summary}`,
@@ -47,14 +68,19 @@ function getResponse(message) {
     };
   }
 
-  // --------------------------------
-  // Experience
-  // --------------------------------
+  // ========================================
+  // EXPERIENCE / CAREER / WORK HISTORY
+  // ========================================
   if (
     normalized.includes("experience") ||
     normalized.includes("career") ||
-    normalized.includes("worked") ||
-    normalized.includes("work")
+    normalized.includes("work history") ||
+    normalized.includes("worked before") ||
+    normalized.includes("worked at") ||
+    normalized.includes("where has he worked") ||
+    normalized.includes("where did he work") ||
+    normalized.includes("what has he worked on") ||
+    normalized.includes("professional background")
   ) {
     if (!experience.length) {
       return {
@@ -64,11 +90,11 @@ function getResponse(message) {
     }
 
     const companies = experience
-      .map((item) => `${item.company} (${item.role})`)
+      .map((item) => `${item.company} as ${item.role}`)
       .join(", ");
 
     return {
-      text: `Einnar has professional experience across ${companies}. His work includes construction monitoring, site inspections, project monitoring, quantity take-offs, cost estimation, and project reporting.`,
+      text: `Einnar has professional experience with ${companies}. His work includes construction monitoring, site inspections, contractor coordination, quantity take-offs, cost estimation, and project reporting.`,
       action: {
         label: "View Experience",
         target: "#experience",
@@ -76,13 +102,44 @@ function getResponse(message) {
     };
   }
 
-  // --------------------------------
-  // Training / Certifications
-  // --------------------------------
+  // ========================================
+  // PROFESSIONAL FOCUS / SKILLS
+  // ========================================
+  if (
+    normalized.includes("skill") ||
+    normalized.includes("skills") ||
+    normalized.includes("special") ||
+    normalized.includes("specialize") ||
+    normalized.includes("specialises") ||
+    normalized.includes("expertise") ||
+    normalized.includes("focus") ||
+    normalized.includes("what does he do") ||
+    normalized.includes("what kind of engineering") ||
+    normalized.includes("what is he good at")
+  ) {
+    return {
+      text: `Einnar's professional focus includes ${profile.focus.join(
+        ", "
+      )}.`,
+      action: {
+        label: "View About",
+        target: "#about",
+      },
+    };
+  }
+
+  // ========================================
+  // TRAINING / CERTIFICATIONS
+  // ========================================
   if (
     normalized.includes("training") ||
     normalized.includes("certification") ||
-    normalized.includes("certificate")
+    normalized.includes("certifications") ||
+    normalized.includes("certificate") ||
+    normalized.includes("certificates") ||
+    normalized.includes("trained") ||
+    normalized.includes("where did he train") ||
+    normalized.includes("professional development")
   ) {
     if (!training.length) {
       return {
@@ -96,7 +153,7 @@ function getResponse(message) {
       .join(", ");
 
     return {
-      text: `Einnar's training includes ${trainingList}. These cover areas such as construction estimating, quantity take-offs, project scheduling, digital plan analysis, and cost management.`,
+      text: `Einnar's training includes ${trainingList}. These cover construction estimating, quantity take-off, project scheduling, digital plan analysis, material quantification, and construction cost management.`,
       action: {
         label: "View Training",
         target: "#certifications",
@@ -104,24 +161,31 @@ function getResponse(message) {
     };
   }
 
-  // --------------------------------
-  // Projects
-  // --------------------------------
+  // ========================================
+  // PROJECTS
+  // ========================================
   if (
     normalized.includes("project") ||
-    normalized.includes("projects")
+    normalized.includes("projects") ||
+    normalized.includes("portfolio projects") ||
+    normalized.includes("what projects") ||
+    normalized.includes("projects has he")
   ) {
     if (!projects.length) {
       return {
         text:
-          "Project information is currently being prepared. More projects will be added once the portfolio content is finalized.",
+          "Project information is currently being prepared and will be added to the portfolio once the final project details and images are provided.",
+        action: {
+          label: "View Projects",
+          target: "#projects",
+        },
       };
     }
 
     return {
-      text: `Einnar has ${
-        projects.length
-      } project${projects.length > 1 ? "s" : ""} featured in his portfolio. You can explore them through the Projects section.`,
+      text: `Einnar currently has ${projects.length} featured ${
+        projects.length === 1 ? "project" : "projects"
+      } in his portfolio.`,
       action: {
         label: "View Projects",
         target: "#projects",
@@ -129,52 +193,16 @@ function getResponse(message) {
     };
   }
 
-  // --------------------------------
-  // Contact
-  // --------------------------------
+  // ========================================
+  // LOCATION
+  // ========================================
   if (
-    normalized.includes("contact") ||
-    normalized.includes("email") ||
-    normalized.includes("phone") ||
-    normalized.includes("linkedin") ||
-    normalized.includes("reach")
-  ) {
-    return {
-      text: `You can contact Einnar through the Contact section. His current location is ${contact.location}, and his portfolio also provides his email, phone, and LinkedIn information.`,
-      action: {
-        label: "Contact Einnar",
-        target: "#contact",
-      },
-    };
-  }
-
-  // --------------------------------
-  // Skills / Focus
-  // --------------------------------
-  if (
-    normalized.includes("skill") ||
-    normalized.includes("skills") ||
-    normalized.includes("special") ||
-    normalized.includes("focus")
-  ) {
-    return {
-      text: `Einnar's professional focus includes ${profile.focus.join(
-        ", "
-      )}.`,
-      action: {
-        label: "View About",
-        target: "#about",
-      },
-    };
-  }
-
-  // --------------------------------
-  // Location
-  // --------------------------------
-  if (
-    normalized.includes("where") ||
+    normalized.includes("where is einnar") ||
+    normalized.includes("where is he") ||
+    normalized.includes("where does he live") ||
+    normalized.includes("where is he based") ||
     normalized.includes("location") ||
-    normalized.includes("based")
+    normalized.includes("based in")
   ) {
     return {
       text: `Einnar is based in ${profile.location}.`,
@@ -185,12 +213,65 @@ function getResponse(message) {
     };
   }
 
-  // --------------------------------
-  // Fallback
-  // --------------------------------
+  // ========================================
+  // LINKEDIN
+  // ========================================
+  if (
+    normalized.includes("linkedin") ||
+    normalized.includes("linked in") ||
+    normalized.includes("professional profile") ||
+    normalized.includes("online profile")
+  ) {
+    if (
+      !contact.linkedin?.url ||
+      contact.linkedin.url === "#"
+    ) {
+      return {
+        text:
+          "Einnar's LinkedIn profile will be added once the final profile link is provided.",
+      };
+    }
+
+    return {
+      text: "You can find Einnar's professional profile on LinkedIn.",
+      action: {
+        label: "View LinkedIn",
+        target: contact.linkedin.url,
+        external: true,
+      },
+    };
+  }
+
+  // ========================================
+  // CONTACT
+  // ========================================
+  if (
+    normalized.includes("contact") ||
+    normalized.includes("contact him") ||
+    normalized.includes("contact einnar") ||
+    normalized.includes("reach him") ||
+    normalized.includes("reach einnar") ||
+    normalized.includes("get in touch") ||
+    normalized.includes("how can i reach") ||
+    normalized.includes("how do i contact") ||
+    normalized.includes("email") ||
+    normalized.includes("phone")
+  ) {
+    return {
+      text: `You can get in touch with Einnar through the Contact section. His portfolio includes his email, phone number, location, and LinkedIn information.`,
+      action: {
+        label: "Contact Einnar",
+        target: "#contact",
+      },
+    };
+  }
+
+  // ========================================
+  // FALLBACK
+  // ========================================
   return {
     text:
-      "I can help you learn more about Einnar's profile, experience, training, projects, professional focus, and contact information. Try asking about one of those topics.",
+      "I can help you learn more about Einnar's background, experience, professional focus, training, projects, location, and contact information. Try asking me about one of those topics.",
   };
 }
 
@@ -209,18 +290,23 @@ export default function Chatbot() {
   // --------------------------------
   // Navigate to portfolio section
   // --------------------------------
-  const navigateToSection = (target) => {
+  const navigateToSection = (target, external = false) => {
+    if (external) {
+        window.open(target, "_blank", "noopener,noreferrer");
+        return;
+    }
+
     const element = document.querySelector(target);
 
     if (element) {
-      element.scrollIntoView({
+        element.scrollIntoView({
         behavior: "smooth",
         block: "start",
-      });
+        });
     }
 
     setIsOpen(false);
-  };
+    };
 
   // --------------------------------
   // Send message
@@ -364,7 +450,7 @@ export default function Chatbot() {
 
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.08em]">
-                    Einnar Assistant
+                    Foreman                    
                   </p>
 
                   <p className="mt-1 font-mono text-[8px] uppercase tracking-[0.16em] text-white/70">
@@ -449,7 +535,8 @@ export default function Chatbot() {
                               type="button"
                               onClick={() =>
                                 navigateToSection(
-                                  item.action.target
+                                    item.action.target,
+                                    item.action.external
                                 )
                               }
                               className="group flex items-center gap-2 border border-black/10 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-black/55 transition-all duration-300 hover:border-[#e87524] hover:bg-[#e87524] hover:text-white"

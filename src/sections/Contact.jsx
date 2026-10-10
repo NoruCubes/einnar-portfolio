@@ -12,20 +12,20 @@ const contactDetails = [
   {
     icon: Mail,
     label: "Email",
-    value: "your.email@example.com",
-    href: "mailto:your.email@example.com",
+    value: "einnarjbose@gmail.com",
+    href: "mailto:einnarjbose@gmail.com",
   },
   {
     icon: Phone,
     label: "Phone",
-    value: "+63 XXX XXX XXXX",
-    href: "tel:+63XXXXXXXXXX",
+    value: "+63 995 211 2147",
+    href: "tel:+639952112147",
   },
   {
     icon: FaLinkedinIn,
     label: "LinkedIn",
-    value: "Einnar Bose",
-    href: "https://www.linkedin.com/",
+    value: "Einnar James Bose",
+    href: "https://www.linkedin.com/in/einnarjamesbose",
     external: true,
   },
   {
@@ -83,7 +83,7 @@ export default function Contact() {
             </h2>
           </motion.div>
 
-          {/* Description */}
+          {/* Description and Contact Actions */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -100,25 +100,47 @@ export default function Contact() {
               collaboration in mind? Feel free to get in touch.
             </p>
 
-            <a
-              href="mailto:your.email@example.com"
-              className="group mt-8 flex w-fit items-center gap-4 border border-black/15 px-6 py-4 font-mono text-[10px] uppercase tracking-[0.18em] transition-all duration-300 hover:border-[#e87524] hover:bg-[#e87524] hover:text-white"
-            >
-              Email Me
+            {/* Buttons Side by Side */}
+            <div className="mt-8 flex flex-wrap items-center gap-3">
 
-              <ArrowUpRight
-                size={16}
-                strokeWidth={1.4}
-                className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-              />
-            </a>
+              {/* Email Button */}
+              <a
+                href="mailto:einnarjbose@gmail.com"
+                className="group flex w-fit items-center gap-4 border border-black/15 px-6 py-4 font-mono text-[10px] uppercase tracking-[0.18em] transition-all duration-300 hover:border-[#e87524] hover:bg-[#e87524] hover:text-white"
+              >
+                Email Me
+
+                <ArrowUpRight
+                  size={16}
+                  strokeWidth={1.4}
+                  className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+              </a>
+
+              {/* View Resume Button */}
+              <a
+                href="/Einnar-Bose-Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="View Einnar Bose's resume in a new tab"
+                className="group flex w-fit items-center gap-4 border border-black/15 px-6 py-4 font-mono text-[10px] uppercase tracking-[0.18em] transition-all duration-300 hover:border-[#e87524] hover:bg-[#e87524] hover:text-white"
+              >
+                View Resume
+
+                <ArrowUpRight
+                  size={16}
+                  strokeWidth={1.4}
+                  className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+              </a>
+
+            </div>
           </motion.div>
 
         </div>
 
         {/* Contact Details */}
         <div className="mt-24 border-t border-black/10">
-
           <div className="grid md:grid-cols-2 lg:grid-cols-4">
 
             {contactDetails.map((item, index) => {
@@ -181,7 +203,6 @@ export default function Contact() {
             })}
 
           </div>
-
         </div>
 
         {/* Closing Statement */}

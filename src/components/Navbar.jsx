@@ -44,7 +44,7 @@ export default function Navbar() {
 
             <div>
               <p className="text-xs font-semibold uppercase tracking-[-0.02em] text-white">
-                Einnar Bose
+                Einnar James Bose
               </p>
 
               <p className="mt-0.5 font-mono text-[8px] uppercase tracking-[0.16em] text-white/65">
