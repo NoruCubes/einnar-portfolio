@@ -10,12 +10,15 @@ import Certifications from "./sections/Certifications";
 import Projects from "./sections/Projects";
 import Contact from "./sections/Contact";
 
+import { Analytics } from "@vercel/analytics/react";
+
 export default function App() {
   return (
     <div className="min-h-screen bg-white text-[#161616]">
       <Navbar />
 
       <main>
+        <Analytics />
         <Hero />
         <Profile />
         <Experience />
