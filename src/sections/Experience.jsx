@@ -7,7 +7,7 @@ const experiences = [
     number: "01",
     period: "2025 — 2026",
     company: "Ayala Property Management Corporation",
-    role: "Property Engineering",
+    role: "Property Engineer",
     description:
       "Manage construction monitoring, site inspections, contractor coordination, quantity take-offs, cost estimation, and project reporting while ensuring compliance with building regulations and quality standards.",
     responsibilities: [
@@ -23,7 +23,7 @@ const experiences = [
     number: "02",
     period: "2025",
     company: "Laguna Water Corporation",
-    role: "Project Monitoring",
+    role: "Project Engineer",
     description:
       "Monitored project quality, site safety, and compliance through regular inspections, standards implementation, and daily progress reporting.",
     responsibilities: [

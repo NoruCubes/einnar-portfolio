@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 import { useEffect, useRef, useState } from "react";
+=======
+import { useState } from "react";
+>>>>>>> feature/chatbot-navigation
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowUpRight,
@@ -19,13 +23,18 @@ const suggestedQuestions = [
   "Tell me about Einnar",
   "What is Einnar's experience?",
   "What projects has Einnar worked on?",
-  "Where is Einnar based?",
+  "Tell me about the perimeter fence project",
   "What training has Einnar completed?",
   "How can I contact Einnar?",
 ];
 
 /* ========================================
+<<<<<<< HEAD
    PROJECT INFORMATION
+=======
+   FEATURED PROJECTS
+   Synchronized with Projects.jsx
+>>>>>>> feature/chatbot-navigation
 ======================================== */
 
 const featuredProjects = [
@@ -33,13 +42,21 @@ const featuredProjects = [
     number: "01",
     title: "Perimeter Electric Fence Installation",
     category: "Feasibility Study, Cost Analysis",
+<<<<<<< HEAD
     year: "2025",
+=======
+    year: "2026",
+>>>>>>> feature/chatbot-navigation
     keywords: [
       "perimeter fence",
       "electric fence",
       "fence installation",
       "feasibility study",
       "terms of reference",
+<<<<<<< HEAD
+=======
+      "tor",
+>>>>>>> feature/chatbot-navigation
       "safety considerations",
     ],
     description:
@@ -56,8 +73,14 @@ const featuredProjects = [
       "asphalting",
       "basketball court",
       "repainting",
+<<<<<<< HEAD
       "design layouts",
       "building regulations",
+=======
+      "design layout",
+      "building regulations",
+      "property development",
+>>>>>>> feature/chatbot-navigation
     ],
     description:
       "Prepared design layouts for in-house property development projects, ensuring alignment with project requirements, site conditions, technical specifications, and applicable building regulations.",
@@ -74,14 +97,22 @@ const featuredProjects = [
       "gantt charts",
       "project scheduling",
       "construction progress",
+<<<<<<< HEAD
+=======
+      "outstanding tasks",
+>>>>>>> feature/chatbot-navigation
     ],
     description:
       "Prepared Gantt charts and monitored project progress for concrete humps projects to track schedules, completed activities, and outstanding tasks.",
   },
   {
     number: "04",
+<<<<<<< HEAD
     title:
       "In-House Property Development Quotation and Cost Monitoring",
+=======
+    title: "In-House Property Development Quotation and Cost Monitoring",
+>>>>>>> feature/chatbot-navigation
     category: "Project Monitoring",
     year: "2025",
     keywords: [
@@ -90,25 +121,48 @@ const featuredProjects = [
       "cost monitoring",
       "contractor proposals",
       "project expenses",
+<<<<<<< HEAD
       "cost comparison",
       "estimated expenses",
+=======
+      "estimated expenses",
+      "cost comparison",
+      "project costs",
+>>>>>>> feature/chatbot-navigation
     ],
     description:
       "Prepared and monitored quotations for in-house property development projects by reviewing contractor proposals, comparing costs, and tracking estimated project expenses.",
   },
   {
     number: "05",
+<<<<<<< HEAD
     title: "Construction of Concrete Hump Monitoring",
     category: "Project Monitoring",
     year: "2025",
     keywords: ["concrete hump project", "construction monitoring"],
     description:
       "Prepared Gantt charts and monitored project progress for concrete humps projects to track schedules, completed activities, and outstanding tasks.",
+=======
+    title: "Esports and NFT Social Media Management",
+    category: "Social Media Management",
+    year: "2022",
+    keywords: [
+      "concrete hump project",
+      "construction monitoring",
+    ],
+    description:
+      "Managed and led social media activities for esports and NFT projects, including content planning, creation, and publishing. Developed engaging social media content to strengthen online presence.",
+>>>>>>> feature/chatbot-navigation
   },
 ];
 
 /* ========================================
+<<<<<<< HEAD
    TRAINING INFORMATION
+=======
+   TRAINING & CERTIFICATIONS
+   Synchronized with Certifications.jsx
+>>>>>>> feature/chatbot-navigation
 ======================================== */
 
 const featuredTraining = [
@@ -149,6 +203,7 @@ function getResponse(message) {
   ---------------------------------------- */
 
   if (
+<<<<<<< HEAD
     /^(hi|hello|hey|heya|hiya)[!.? ]*$/.test(normalized) ||
     hasAny(
       "good morning",
@@ -159,16 +214,30 @@ function getResponse(message) {
     return {
       text:
         "Hello! I'm Einnar's portfolio assistant. I can help you explore his background, professional experience, projects, training, skills, and contact information. What would you like to know?",
+=======
+    /^(hi|hello|hey|heya|hiya|good morning|good afternoon|good evening)[!.? ]*$/i.test(
+      normalized
+    ) ||
+    hasAny("good morning", "good afternoon", "good evening")
+  ) {
+    return {
+      text: "Hello! I'm Foreman, Einnar's portfolio assistant. I can help you explore his background, professional experience, projects, training, skills, and contact information. What would you like to know?",
+>>>>>>> feature/chatbot-navigation
     };
   }
 
   /* ----------------------------------------
+<<<<<<< HEAD
      LINKEDIN
      Check before general contact questions.
+=======
+     ABOUT / PROFILE
+>>>>>>> feature/chatbot-navigation
   ---------------------------------------- */
 
   if (
     hasAny(
+<<<<<<< HEAD
       "linkedin",
       "linked in",
       "professional profile",
@@ -256,6 +325,22 @@ function getResponse(message) {
   ) {
     return {
       text: `Einnar is based in ${profile.location}.`,
+=======
+      "who is einnar",
+      "who is he",
+      "tell me about einnar",
+      "tell me about him",
+      "about einnar",
+      "background",
+      "profile",
+      "introduce einnar",
+      "who am i talking to"
+    ) ||
+    normalized === "about"
+  ) {
+    return {
+      text: `${profile.name} is a ${profile.title} based in ${profile.location}. ${profile.summary}`,
+>>>>>>> feature/chatbot-navigation
       action: {
         label: "View About",
         target: "#about",
@@ -264,7 +349,11 @@ function getResponse(message) {
   }
 
   /* ----------------------------------------
+<<<<<<< HEAD
      EXPERIENCE
+=======
+     EXPERIENCE / CAREER
+>>>>>>> feature/chatbot-navigation
   ---------------------------------------- */
 
   if (
@@ -296,10 +385,17 @@ function getResponse(message) {
 
     const companies = experience
       .map((item) => `${item.company} as ${item.role}`)
+<<<<<<< HEAD
       .join(", ");
 
     return {
       text: `Einnar has professional experience with ${companies}. His work includes construction monitoring, site inspections, contractor coordination, quantity take-offs, cost estimation, and project reporting.`,
+=======
+      .join("; ");
+
+    return {
+      text: `Einnar's professional experience includes ${companies}. His portfolio describes work related to construction monitoring, site inspections, contractor coordination, quantity take-offs, cost estimation, and project reporting.`,
+>>>>>>> feature/chatbot-navigation
       action: {
         label: "View Experience",
         target: "#experience",
@@ -308,11 +404,16 @@ function getResponse(message) {
   }
 
   /* ----------------------------------------
+<<<<<<< HEAD
      TRAINING / CERTIFICATIONS
+=======
+     SKILLS / PROFESSIONAL FOCUS
+>>>>>>> feature/chatbot-navigation
   ---------------------------------------- */
 
   if (
     hasAny(
+<<<<<<< HEAD
       "training",
       "certification",
       "certifications",
@@ -349,14 +450,77 @@ function getResponse(message) {
         action: {
           label: "View Training",
           target: "#certifications",
+=======
+      "skill",
+      "skills",
+      "specialty",
+      "specialties",
+      "specialize",
+      "specialization",
+      "expertise",
+      "professional focus",
+      "what does he do",
+      "what is he good at",
+      "what kind of engineering",
+      "areas of focus",
+      "technical abilities"
+    )
+  ) {
+    const focus = profile.focus || [];
+
+    if (!focus.length) {
+      return {
+        text:
+          "Einnar's detailed professional focus and skills are not currently available.",
+        action: {
+          label: "View About",
+          target: "#about",
+>>>>>>> feature/chatbot-navigation
         },
       };
     }
 
+<<<<<<< HEAD
+=======
+    return {
+      text: `Einnar's professional focus includes ${focus.join(", ")}.`,
+      action: {
+        label: "View About",
+        target: "#about",
+      },
+    };
+  }
+
+  /* ----------------------------------------
+     TRAINING / CERTIFICATIONS
+  ---------------------------------------- */
+
+  if (
+    hasAny(
+      "training",
+      "certification",
+      "certifications",
+      "certificate",
+      "certificates",
+      "trained",
+      "professional development",
+      "cosh",
+      "planswift",
+      "primavera",
+      "smartsourcing",
+      "safety officer",
+      "quantity take-off",
+      "quantity takeoff",
+      "roofing estimation",
+      "digital plan analysis"
+    )
+  ) {
+>>>>>>> feature/chatbot-navigation
     const trainingList = featuredTraining
       .map((item) => item.title)
       .join(", ");
 
+<<<<<<< HEAD
     return {
       text: `Einnar's listed training and certifications include ${trainingList}.\n\nPlanSwift & Primavera covers construction estimating, quantity take-off, Excel integration, project scheduling, and cost management.\n\nSmartSourcing USA focuses on roofing estimation, digital plan analysis, material quantification, and labor costing.\n\nThe 40-Hour COSH Training covers construction occupational safety and health, workplace safety practices, and Safety Officer 2 responsibilities, including additional Training of Trainers (TOT) preparation.`,
       action: {
@@ -400,10 +564,31 @@ function getResponse(message) {
         action: {
           label: "View Projects",
           target: "#projects",
+=======
+    const matchedTraining = featuredTraining.find((item) =>
+      normalized.includes(item.title.toLowerCase())
+    );
+
+    if (matchedTraining) {
+      return {
+        text: `${matchedTraining.title}: ${matchedTraining.description}${
+          matchedTraining.date
+            ? `\n\nDate: ${matchedTraining.date}`
+            : ""
+        }${
+          matchedTraining.provider
+            ? `\nProvider: ${matchedTraining.provider}`
+            : ""
+        }`,
+        action: {
+          label: "View Training",
+          target: "#certifications",
+>>>>>>> feature/chatbot-navigation
         },
       };
     }
 
+<<<<<<< HEAD
     const projectList = featuredProjects
       .map(
         (project) =>
@@ -416,11 +601,19 @@ function getResponse(message) {
       action: {
         label: "View Projects",
         target: "#projects",
+=======
+    return {
+      text: `Einnar's listed training and certifications include ${trainingList}.\n\nPlanSwift & Primavera covers construction estimating, quantity take-off, Excel integration, project scheduling, and construction cost management.\n\nSmartSourcing USA focuses on construction estimating workflows, roofing estimation, digital plan analysis, material quantification, and labor costing.\n\nThe 40-Hour COSH Training covers construction occupational safety and health, workplace safety practices, and Safety Officer 2 responsibilities, including additional Training of Trainers (TOT) preparation.`,
+      action: {
+        label: "View Training",
+        target: "#certifications",
+>>>>>>> feature/chatbot-navigation
       },
     };
   }
 
   /* ----------------------------------------
+<<<<<<< HEAD
      SKILLS / PROFESSIONAL FOCUS
   ---------------------------------------- */
 
@@ -450,27 +643,82 @@ function getResponse(message) {
         action: {
           label: "View About",
           target: "#about",
+=======
+     PROJECTS
+  ---------------------------------------- */
+
+  const matchedProject = featuredProjects.find((project) =>
+    project.keywords.some((keyword) =>
+      normalized.includes(keyword.toLowerCase())
+    )
+  );
+
+  if (
+    matchedProject ||
+    hasAny(
+      "project",
+      "projects",
+      "portfolio projects",
+      "what has he worked on",
+      "what did he work on",
+      "construction work",
+      "construction project",
+      "engineering project",
+      "show me his work",
+      "selected work",
+      "project monitoring",
+      "feasibility study",
+      "property engineering"
+    )
+  ) {
+    if (matchedProject) {
+      return {
+        text: `${matchedProject.title} (${matchedProject.year})\n${matchedProject.category}\n\n${matchedProject.description}`,
+        action: {
+          label: "View Projects",
+          target: "#projects",
+>>>>>>> feature/chatbot-navigation
         },
       };
     }
 
+<<<<<<< HEAD
     return {
       text: `Einnar's professional focus includes ${focus.join(", ")}.`,
       action: {
         label: "View About",
         target: "#about",
+=======
+    const projectList = featuredProjects
+      .map(
+        (project) =>
+          `${project.number}. ${project.title} (${project.year})`
+      )
+      .join("\n\n");
+
+    return {
+      text: `Einnar's portfolio currently features ${featuredProjects.length} project entries covering feasibility studies, property engineering, construction monitoring, project scheduling, and cost monitoring.\n\n${projectList}\n\nVisit the Projects section to explore the descriptions and project visuals.`,
+      action: {
+        label: "View Projects",
+        target: "#projects",
+>>>>>>> feature/chatbot-navigation
       },
     };
   }
 
   /* ----------------------------------------
+<<<<<<< HEAD
      PROFILE / ABOUT
      Do not match every message containing
      the word "Einnar" here.
+=======
+     LOCATION
+>>>>>>> feature/chatbot-navigation
   ---------------------------------------- */
 
   if (
     hasAny(
+<<<<<<< HEAD
       "who is einnar",
       "who is he",
       "tell me about einnar",
@@ -484,9 +732,108 @@ function getResponse(message) {
   ) {
     return {
       text: `${profile.name} is a ${profile.title} based in ${profile.location}. ${profile.summary}`,
+=======
+      "where is einnar",
+      "where is he",
+      "where does he live",
+      "where is he based",
+      "location",
+      "based in",
+      "which country",
+      "which city"
+    )
+  ) {
+    return {
+      text: `Einnar is based in ${profile.location}.`,
+>>>>>>> feature/chatbot-navigation
       action: {
         label: "View About",
         target: "#about",
+      },
+    };
+  }
+
+  /* ----------------------------------------
+<<<<<<< HEAD
+     RESUME
+=======
+     LINKEDIN
+>>>>>>> feature/chatbot-navigation
+  ---------------------------------------- */
+
+  if (
+    hasAny(
+<<<<<<< HEAD
+      "resume",
+      "résumé",
+      "cv",
+      "curriculum vitae"
+    )
+  ) {
+    return {
+      text:
+        "You can view Einnar's resume through the View Resume button in the Contact section of his portfolio.",
+      action: {
+        label: "View Contact Section",
+        target: "#contact",
+=======
+      "linkedin",
+      "linked in",
+      "professional profile",
+      "online profile"
+    )
+  ) {
+    const linkedinUrl = contact.linkedin?.url;
+
+    if (!linkedinUrl || linkedinUrl === "#") {
+      return {
+        text:
+          "Einnar's LinkedIn profile link will be added once the final profile URL is provided.",
+      };
+    }
+
+    return {
+      text:
+        "You can visit Einnar's professional profile on LinkedIn using the link below.",
+      action: {
+        label: "View LinkedIn",
+        target: linkedinUrl,
+        external: true,
+>>>>>>> feature/chatbot-navigation
+      },
+    };
+  }
+
+  /* ----------------------------------------
+<<<<<<< HEAD
+=======
+     CONTACT
+  ---------------------------------------- */
+
+  if (
+    hasAny(
+      "contact",
+      "contact him",
+      "contact einnar",
+      "reach him",
+      "reach einnar",
+      "get in touch",
+      "how can i reach",
+      "how do i contact",
+      "email",
+      "phone",
+      "telephone",
+      "hire him",
+      "hire einnar",
+      "send him a message"
+    )
+  ) {
+    return {
+      text:
+        "You can get in touch with Einnar through the Contact section of his portfolio, where his available contact information and professional links are provided.",
+      action: {
+        label: "Contact Einnar",
+        target: "#contact",
       },
     };
   }
@@ -514,12 +861,17 @@ function getResponse(message) {
   }
 
   /* ----------------------------------------
+>>>>>>> feature/chatbot-navigation
      FALLBACK
   ---------------------------------------- */
 
   return {
     text:
+<<<<<<< HEAD
       "I can help you learn more about Einnar's background, experience, professional focus, projects, training, location, and contact information. Try asking about a specific project or choose one of the suggested questions.",
+=======
+      "I can help you learn more about Einnar's background, experience, professional focus, projects, training, location, and contact information. You can ask about a specific project, such as the perimeter electric fence installation or concrete hump monitoring, or choose one of the suggested questions.",
+>>>>>>> feature/chatbot-navigation
   };
 }
 
@@ -536,6 +888,7 @@ export default function Chatbot() {
       id: 1,
       sender: "bot",
       text:
+<<<<<<< HEAD
         "Hello. I'm Einnar's portfolio assistant. How can I help you?",
     },
   ]);
@@ -555,6 +908,14 @@ export default function Chatbot() {
 
   /* ----------------------------------------
      NAVIGATE TO A SECTION OR EXTERNAL LINK
+=======
+        "Hello. I'm Foreman, Einnar's portfolio assistant. How can I help you?",
+    },
+  ]);
+
+  /* ----------------------------------------
+     NAVIGATION
+>>>>>>> feature/chatbot-navigation
   ---------------------------------------- */
 
   const navigateToSection = (target, external = false) => {
@@ -611,7 +972,13 @@ export default function Chatbot() {
 
   return (
     <>
+<<<<<<< HEAD
       {/* FLOATING LAUNCHER */}
+=======
+      {/* =====================================
+          FLOATING CHATBOT LAUNCHER
+      ===================================== */}
+>>>>>>> feature/chatbot-navigation
 
       <motion.button
         type="button"
@@ -648,7 +1015,13 @@ export default function Chatbot() {
         </AnimatePresence>
       </motion.button>
 
+<<<<<<< HEAD
       {/* CHAT WINDOW */}
+=======
+      {/* =====================================
+          CHAT WINDOW
+      ===================================== */}
+>>>>>>> feature/chatbot-navigation
 
       <AnimatePresence>
         {isOpen && (
@@ -672,7 +1045,7 @@ export default function Chatbot() {
 
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.08em]">
-                    Einnar Assistant
+                    Foreman
                   </p>
 
                   <p className="mt-1 font-mono text-[8px] uppercase tracking-[0.16em] text-white/70">
@@ -718,7 +1091,11 @@ export default function Chatbot() {
               </div>
 
               <div className="relative space-y-4">
+<<<<<<< HEAD
                 {/* CONVERSATION */}
+=======
+                {/* Conversation messages */}
+>>>>>>> feature/chatbot-navigation
 
                 {messages.map((item) => (
                   <div
@@ -736,11 +1113,20 @@ export default function Chatbot() {
                           : "border border-black/10 bg-white text-black/70"
                       }`}
                     >
+<<<<<<< HEAD
+=======
+                      {/* Message text */}
+
+>>>>>>> feature/chatbot-navigation
                       <div className="whitespace-pre-line px-4 py-3 text-sm leading-6">
                         {item.text}
                       </div>
 
+<<<<<<< HEAD
                       {/* RESPONSE ACTION */}
+=======
+                      {/* Action button */}
+>>>>>>> feature/chatbot-navigation
 
                       {item.sender === "bot" && item.action && (
                         <div className="px-4 pb-3">
@@ -797,7 +1183,11 @@ export default function Chatbot() {
               <div ref={messagesEndRef} />
             </div>
 
+<<<<<<< HEAD
             {/* INPUT */}
+=======
+            {/* MESSAGE INPUT */}
+>>>>>>> feature/chatbot-navigation
 
             <form
               onSubmit={(event) => {
