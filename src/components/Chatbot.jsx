@@ -806,7 +806,7 @@ export default function Chatbot() {
                 type="submit"
                 className="flex w-14 items-center justify-center border-l border-black/10 text-[#e87524] transition-colors hover:bg-[#e87524] hover:text-white"
                 aria-label="Send message"
-              >
+              >git 
                 <Send size={16} strokeWidth={1.4} />
               </button>
             </form>
