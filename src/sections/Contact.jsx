@@ -119,7 +119,7 @@ export default function Contact() {
 
               {/* View Resume Button */}
               <a
-                href="/Einnar-Bose-Resume.pdf"
+                href="/Bose-Einnar-James_Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="View Einnar Bose's resume in a new tab"
