@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowUpRight,
   Bot,
@@ -10,6 +11,10 @@ import {
 
 import portfolioData from "../data/portfolioData";
 
+/* ========================================
+   SUGGESTED QUESTIONS
+======================================== */
+
 const suggestedQuestions = [
   "Tell me about Einnar",
   "What is Einnar's experience?",
@@ -19,110 +24,508 @@ const suggestedQuestions = [
   "How can I contact Einnar?",
 ];
 
+/* ========================================
+   PROJECT INFORMATION
+======================================== */
+
+const featuredProjects = [
+  {
+    number: "01",
+    title: "Perimeter Electric Fence Installation",
+    category: "Feasibility Study, Cost Analysis",
+    year: "2025",
+    keywords: [
+      "perimeter fence",
+      "electric fence",
+      "fence installation",
+      "feasibility study",
+      "terms of reference",
+      "safety considerations",
+    ],
+    description:
+      "Conducted a feasibility study and prepared the Terms of Reference (TOR) for the proposed installation of an electric fence around the entire property. Evaluated layout options, project costs, technical requirements, safety considerations, and implementation feasibility to determine the most practical and cost-effective solution for the property.",
+  },
+  {
+    number: "02",
+    title:
+      "Construction of Watchtower, Asphalting of Existing Concrete Humps and Repainting of Basketball Court",
+    category: "Property Engineering",
+    year: "2026",
+    keywords: [
+      "watchtower",
+      "asphalting",
+      "basketball court",
+      "repainting",
+      "design layouts",
+      "building regulations",
+    ],
+    description:
+      "Prepared design layouts for in-house property development projects, ensuring alignment with project requirements, site conditions, technical specifications, and applicable building regulations.",
+  },
+  {
+    number: "03",
+    title: "Construction of Concrete Hump Monitoring",
+    category: "Project Monitoring",
+    year: "2025",
+    keywords: [
+      "concrete hump",
+      "hump monitoring",
+      "gantt chart",
+      "gantt charts",
+      "project scheduling",
+      "construction progress",
+    ],
+    description:
+      "Prepared Gantt charts and monitored project progress for concrete humps projects to track schedules, completed activities, and outstanding tasks.",
+  },
+  {
+    number: "04",
+    title:
+      "In-House Property Development Quotation and Cost Monitoring",
+    category: "Project Monitoring",
+    year: "2025",
+    keywords: [
+      "quotation",
+      "quotations",
+      "cost monitoring",
+      "contractor proposals",
+      "project expenses",
+      "cost comparison",
+      "estimated expenses",
+    ],
+    description:
+      "Prepared and monitored quotations for in-house property development projects by reviewing contractor proposals, comparing costs, and tracking estimated project expenses.",
+  },
+  {
+    number: "05",
+    title: "Construction of Concrete Hump Monitoring",
+    category: "Project Monitoring",
+    year: "2025",
+    keywords: ["concrete hump project", "construction monitoring"],
+    description:
+      "Prepared Gantt charts and monitored project progress for concrete humps projects to track schedules, completed activities, and outstanding tasks.",
+  },
+];
+
+/* ========================================
+   TRAINING INFORMATION
+======================================== */
+
+const featuredTraining = [
+  {
+    title: "PlanSwift & Primavera",
+    description:
+      "Training covering construction estimating, quantity take-off, Excel integration, project scheduling, and construction cost management.",
+  },
+  {
+    title: "SmartSourcing USA",
+    description:
+      "Training focused on construction estimating workflows, including roofing estimation, digital plan analysis, material quantification, and labor costing.",
+  },
+  {
+    title: "40-Hour COSH Training",
+    description:
+      "Training focused on construction occupational safety and health, workplace safety practices, and Safety Officer 2 responsibilities, including additional Training of Trainers (TOT) preparation.",
+    date: "January 2025",
+    provider:
+      "Think Safe Training, Consultancy and Services Corporation",
+  },
+];
+
+/* ========================================
+   RESPONSE LOGIC
+======================================== */
+
 function getResponse(message) {
   const normalized = message.toLowerCase().trim();
 
-  const {
-    profile,
-    experience,
-    training,
-    projects,
-    contact,
-  } = portfolioData;
+  const { profile, experience, contact } = portfolioData;
 
-  // Profile
+  const hasAny = (...keywords) =>
+    keywords.some((keyword) => normalized.includes(keyword));
+
+  /* ----------------------------------------
+     GREETING
+  ---------------------------------------- */
+
   if (
-    normalized.includes("who") ||
-    normalized.includes("einnar") ||
-    normalized.includes("about")
+    /^(hi|hello|hey|heya|hiya)[!.? ]*$/.test(normalized) ||
+    hasAny(
+      "good morning",
+      "good afternoon",
+      "good evening"
+    )
   ) {
-    return `${profile.name} is a ${profile.title} based in ${profile.location}. ${profile.summary}`;
+    return {
+      text:
+        "Hello! I'm Einnar's portfolio assistant. I can help you explore his background, professional experience, projects, training, skills, and contact information. What would you like to know?",
+    };
   }
 
-  // Experience
+  /* ----------------------------------------
+     LINKEDIN
+     Check before general contact questions.
+  ---------------------------------------- */
+
   if (
-    normalized.includes("experience") ||
-    normalized.includes("work") ||
-    normalized.includes("career") ||
-    normalized.includes("worked")
+    hasAny(
+      "linkedin",
+      "linked in",
+      "professional profile",
+      "online profile"
+    )
   ) {
-    if (!experience.length) {
-      return "There is currently no professional experience information available.";
+    const linkedinUrl = contact?.linkedin?.url;
+
+    if (!linkedinUrl || linkedinUrl === "#") {
+      return {
+        text:
+          "Einnar's LinkedIn profile link will be added once the final profile URL is provided.",
+        action: {
+          label: "Contact Einnar",
+          target: "#contact",
+        },
+      };
+    }
+
+    return {
+      text:
+        "You can visit Einnar's professional profile on LinkedIn using the link below.",
+      action: {
+        label: "View LinkedIn",
+        target: linkedinUrl,
+        external: true,
+      },
+    };
+  }
+
+  /* ----------------------------------------
+     CONTACT
+     IMPORTANT: Check before profile/location.
+  ---------------------------------------- */
+
+  if (
+    hasAny(
+      "contact",
+      "how can i reach",
+      "how do i reach",
+      "how to reach",
+      "how can i contact",
+      "how do i contact",
+      "how to contact",
+      "reach einnar",
+      "reach him",
+      "get in touch",
+      "send him a message",
+      "send einnar a message",
+      "email",
+      "phone number",
+      "telephone",
+      "hire him",
+      "hire einnar",
+      "contact details",
+      "contact information"
+    )
+  ) {
+    return {
+      text:
+        "You can get in touch with Einnar through the Contact section of his portfolio. There, you can find his available email, phone number, and professional contact information.",
+      action: {
+        label: "Contact Einnar",
+        target: "#contact",
+      },
+    };
+  }
+
+  /* ----------------------------------------
+     LOCATION
+     Keep this separate from the profile response.
+  ---------------------------------------- */
+
+  if (
+    hasAny(
+      "where is einnar",
+      "where is he",
+      "where is he based",
+      "where does he live",
+      "location",
+      "based in",
+      "which country",
+      "which city"
+    )
+  ) {
+    return {
+      text: `Einnar is based in ${profile.location}.`,
+      action: {
+        label: "View About",
+        target: "#about",
+      },
+    };
+  }
+
+  /* ----------------------------------------
+     EXPERIENCE
+  ---------------------------------------- */
+
+  if (
+    hasAny(
+      "experience",
+      "career",
+      "work history",
+      "worked before",
+      "worked at",
+      "where has he worked",
+      "where did he work",
+      "professional background",
+      "employment",
+      "previous job",
+      "previous jobs",
+      "companies"
+    )
+  ) {
+    if (!experience?.length) {
+      return {
+        text:
+          "There is currently no professional experience information available.",
+        action: {
+          label: "View Experience",
+          target: "#experience",
+        },
+      };
     }
 
     const companies = experience
-      .map((item) => `${item.company} (${item.role})`)
+      .map((item) => `${item.company} as ${item.role}`)
       .join(", ");
 
-    return `Einnar has professional experience across ${companies}. His work includes construction monitoring, site inspections, project monitoring, quantity take-offs, cost estimation, and project reporting.`;
+    return {
+      text: `Einnar has professional experience with ${companies}. His work includes construction monitoring, site inspections, contractor coordination, quantity take-offs, cost estimation, and project reporting.`,
+      action: {
+        label: "View Experience",
+        target: "#experience",
+      },
+    };
   }
 
-  // Training
+  /* ----------------------------------------
+     TRAINING / CERTIFICATIONS
+  ---------------------------------------- */
+
   if (
-    normalized.includes("training") ||
-    normalized.includes("certification") ||
-    normalized.includes("certificate")
+    hasAny(
+      "training",
+      "certification",
+      "certifications",
+      "certificate",
+      "certificates",
+      "trained",
+      "professional development",
+      "cosh",
+      "planswift",
+      "primavera",
+      "smartsourcing",
+      "safety officer",
+      "quantity take-off",
+      "quantity takeoff",
+      "roofing estimation",
+      "digital plan analysis"
+    )
   ) {
-    if (!training.length) {
-      return "There is currently no training information available.";
+    const matchedTraining = featuredTraining.find((item) =>
+      normalized.includes(item.title.toLowerCase())
+    );
+
+    if (matchedTraining) {
+      return {
+        text: `${matchedTraining.title}\n\n${matchedTraining.description}${
+          matchedTraining.date
+            ? `\n\nDate: ${matchedTraining.date}`
+            : ""
+        }${
+          matchedTraining.provider
+            ? `\nProvider: ${matchedTraining.provider}`
+            : ""
+        }`,
+        action: {
+          label: "View Training",
+          target: "#certifications",
+        },
+      };
     }
 
-    const trainingList = training
+    const trainingList = featuredTraining
       .map((item) => item.title)
       .join(", ");
 
-    return `Einnar's training includes ${trainingList}. These cover areas such as construction estimating, quantity take-offs, project scheduling, digital plan analysis, and cost management.`;
+    return {
+      text: `Einnar's listed training and certifications include ${trainingList}.\n\nPlanSwift & Primavera covers construction estimating, quantity take-off, Excel integration, project scheduling, and cost management.\n\nSmartSourcing USA focuses on roofing estimation, digital plan analysis, material quantification, and labor costing.\n\nThe 40-Hour COSH Training covers construction occupational safety and health, workplace safety practices, and Safety Officer 2 responsibilities, including additional Training of Trainers (TOT) preparation.`,
+      action: {
+        label: "View Training",
+        target: "#certifications",
+      },
+    };
   }
 
-  // Projects
+  /* ----------------------------------------
+     PROJECTS
+  ---------------------------------------- */
+
+  const matchedProject = featuredProjects.find((project) =>
+    project.keywords.some((keyword) =>
+      normalized.includes(keyword.toLowerCase())
+    )
+  );
+
   if (
-    normalized.includes("project") ||
-    normalized.includes("projects")
+    matchedProject ||
+    hasAny(
+      "project",
+      "projects",
+      "portfolio projects",
+      "what has he worked on",
+      "what did he work on",
+      "construction work",
+      "construction project",
+      "engineering project",
+      "show me his work",
+      "selected work",
+      "project monitoring",
+      "feasibility study",
+      "property engineering"
+    )
   ) {
-    if (!projects.length) {
-      return "Project information is currently being prepared. More projects will be added once the portfolio content is finalized.";
+    if (matchedProject) {
+      return {
+        text: `${matchedProject.title} (${matchedProject.year})\n${matchedProject.category}\n\n${matchedProject.description}`,
+        action: {
+          label: "View Projects",
+          target: "#projects",
+        },
+      };
     }
 
-    return `Einnar has ${
-      projects.length
-    } project${projects.length > 1 ? "s" : ""} featured in his portfolio. You can explore them through the Projects section.`;
+    const projectList = featuredProjects
+      .map(
+        (project) =>
+          `${project.number}. ${project.title} (${project.year})`
+      )
+      .join("\n\n");
+
+    return {
+      text: `Einnar's portfolio currently features ${featuredProjects.length} project entries covering feasibility studies, property engineering, construction monitoring, project scheduling, and cost monitoring.\n\n${projectList}\n\nVisit the Projects section to explore the project descriptions and visuals.`,
+      action: {
+        label: "View Projects",
+        target: "#projects",
+      },
+    };
   }
 
-  // Contact
+  /* ----------------------------------------
+     SKILLS / PROFESSIONAL FOCUS
+  ---------------------------------------- */
+
   if (
-    normalized.includes("contact") ||
-    normalized.includes("email") ||
-    normalized.includes("phone") ||
-    normalized.includes("linkedin") ||
-    normalized.includes("reach")
+    hasAny(
+      "skill",
+      "skills",
+      "specialty",
+      "specialties",
+      "specialize",
+      "specialization",
+      "expertise",
+      "professional focus",
+      "what does he do",
+      "what is he good at",
+      "what kind of engineering",
+      "areas of focus",
+      "technical abilities"
+    )
   ) {
-    return `You can contact Einnar through the Contact section. His current location is ${contact.location}, and his portfolio also provides his email, phone, and LinkedIn information.`;
+    const focus = profile.focus || [];
+
+    if (!focus.length) {
+      return {
+        text:
+          "Einnar's detailed professional focus and skills are not currently available.",
+        action: {
+          label: "View About",
+          target: "#about",
+        },
+      };
+    }
+
+    return {
+      text: `Einnar's professional focus includes ${focus.join(", ")}.`,
+      action: {
+        label: "View About",
+        target: "#about",
+      },
+    };
   }
 
-  // Skills / focus
+  /* ----------------------------------------
+     PROFILE / ABOUT
+     Do not match every message containing
+     the word "Einnar" here.
+  ---------------------------------------- */
+
   if (
-    normalized.includes("skill") ||
-    normalized.includes("skills") ||
-    normalized.includes("special") ||
-    normalized.includes("focus")
+    hasAny(
+      "who is einnar",
+      "who is he",
+      "tell me about einnar",
+      "tell me about him",
+      "about einnar",
+      "his background",
+      "introduce einnar",
+      "profile"
+    ) ||
+    normalized === "about"
   ) {
-    return `Einnar's professional focus includes ${profile.focus.join(
-      ", "
-    )}.`;
+    return {
+      text: `${profile.name} is a ${profile.title} based in ${profile.location}. ${profile.summary}`,
+      action: {
+        label: "View About",
+        target: "#about",
+      },
+    };
   }
 
-  // Location
+  /* ----------------------------------------
+     RESUME
+  ---------------------------------------- */
+
   if (
-    normalized.includes("where") ||
-    normalized.includes("location") ||
-    normalized.includes("based")
+    hasAny(
+      "resume",
+      "résumé",
+      "cv",
+      "curriculum vitae"
+    )
   ) {
-    return `Einnar is based in ${profile.location}.`;
+    return {
+      text:
+        "You can view Einnar's resume through the View Resume button in the Contact section of his portfolio.",
+      action: {
+        label: "View Contact Section",
+        target: "#contact",
+      },
+    };
   }
 
-  // Fallback
-  return "I can help you learn more about Einnar's profile, experience, training, projects, professional focus, and contact information. Try asking about one of those topics.";
+  /* ----------------------------------------
+     FALLBACK
+  ---------------------------------------- */
+
+  return {
+    text:
+      "I can help you learn more about Einnar's background, experience, professional focus, projects, training, location, and contact information. Try asking about a specific project or choose one of the suggested questions.",
+  };
 }
+
+/* ========================================
+   CHATBOT COMPONENT
+======================================== */
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -132,25 +535,69 @@ export default function Chatbot() {
     {
       id: 1,
       sender: "bot",
-      text: "Hello. I'm Einnar's portfolio assistant. How can I help you?",
+      text:
+        "Hello. I'm Einnar's portfolio assistant. How can I help you?",
     },
   ]);
+
+  // Reference to the bottom of the chat conversation.
+  const messagesEndRef = useRef(null);
+
+  // Automatically scroll the chat panel to the latest message.
+  useEffect(() => {
+    if (isOpen) {
+      messagesEndRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  }, [messages, isOpen]);
+
+  /* ----------------------------------------
+     NAVIGATE TO A SECTION OR EXTERNAL LINK
+  ---------------------------------------- */
+
+  const navigateToSection = (target, external = false) => {
+    if (external) {
+      window.open(target, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    const element = document.querySelector(target);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+
+    setIsOpen(false);
+  };
+
+  /* ----------------------------------------
+     SEND MESSAGE
+  ---------------------------------------- */
 
   const sendMessage = (text = message) => {
     const trimmedMessage = text.trim();
 
     if (!trimmedMessage) return;
 
+    const timestamp = Date.now();
+    const response = getResponse(trimmedMessage);
+
     const userMessage = {
-      id: Date.now(),
+      id: timestamp,
       sender: "user",
       text: trimmedMessage,
     };
 
     const botMessage = {
-      id: Date.now() + 1,
+      id: timestamp + 1,
       sender: "bot",
-      text: getResponse(trimmedMessage),
+      text: response.text,
+      action: response.action,
     };
 
     setMessages((current) => [
@@ -164,7 +611,8 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Floating launcher */}
+      {/* FLOATING LAUNCHER */}
+
       <motion.button
         type="button"
         onClick={() => setIsOpen((current) => !current)}
@@ -200,32 +648,22 @@ export default function Chatbot() {
         </AnimatePresence>
       </motion.button>
 
-      {/* Chat window */}
+      {/* CHAT WINDOW */}
+
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{
-              opacity: 0,
-              y: 20,
-              scale: 0.96,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              scale: 1,
-            }}
-            exit={{
-              opacity: 0,
-              y: 20,
-              scale: 0.96,
-            }}
+            initial={{ opacity: 0, y: 20, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{
               duration: 0.25,
               ease: [0.16, 1, 0.3, 1],
             }}
             className="fixed bottom-24 right-6 z-[60] flex h-[520px] w-[360px] max-w-[calc(100vw-32px)] flex-col overflow-hidden border border-black/10 bg-white shadow-2xl shadow-black/10"
           >
-            {/* Header */}
+            {/* HEADER */}
+
             <div className="flex items-center justify-between bg-[#e87524] px-5 py-4 text-white">
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center bg-white text-[#e87524]">
@@ -249,17 +687,15 @@ export default function Chatbot() {
                 className="flex h-8 w-8 items-center justify-center border border-white/30 transition-colors hover:bg-white hover:text-[#e87524]"
                 aria-label="Close chatbot"
               >
-                <ChevronDown
-                  size={15}
-                  strokeWidth={1.4}
-                />
+                <ChevronDown size={15} strokeWidth={1.4} />
               </button>
             </div>
 
-            {/* Messages */}
-            <div className="relative flex-1 overflow-y-auto px-4 py-5">
+            {/* MESSAGES */}
 
-              {/* Technical grid */}
+            <div className="relative flex-1 overflow-y-auto px-4 py-5">
+              {/* Technical grid background */}
+
               <div className="pointer-events-none absolute inset-0 opacity-[0.45]">
                 <div
                   className="h-full w-full"
@@ -282,8 +718,8 @@ export default function Chatbot() {
               </div>
 
               <div className="relative space-y-4">
+                {/* CONVERSATION */}
 
-                {/* Conversation */}
                 {messages.map((item) => (
                   <div
                     key={item.id}
@@ -294,21 +730,48 @@ export default function Chatbot() {
                     }`}
                   >
                     <div
-                      className={`max-w-[85%] px-4 py-3 text-sm leading-6 ${
+                      className={`max-w-[85%] ${
                         item.sender === "user"
                           ? "bg-[#e87524] text-white"
                           : "border border-black/10 bg-white text-black/70"
                       }`}
                     >
-                      {item.text}
+                      <div className="whitespace-pre-line px-4 py-3 text-sm leading-6">
+                        {item.text}
+                      </div>
+
+                      {/* RESPONSE ACTION */}
+
+                      {item.sender === "bot" && item.action && (
+                        <div className="px-4 pb-3">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              navigateToSection(
+                                item.action.target,
+                                item.action.external
+                              )
+                            }
+                            className="group flex items-center gap-2 border border-black/10 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-black/55 transition-all duration-300 hover:border-[#e87524] hover:bg-[#e87524] hover:text-white"
+                          >
+                            {item.action.label}
+
+                            <ArrowUpRight
+                              size={12}
+                              strokeWidth={1.4}
+                              className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                            />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
 
-                {/* Suggested Questions */}
+                {/* SUGGESTED QUESTIONS */}
+
                 {messages.length === 1 && (
                   <div className="pt-2">
-
                     <p className="mb-3 font-mono text-[9px] uppercase tracking-[0.18em] text-black/35">
                       Suggested Questions
                     </p>
@@ -325,14 +788,17 @@ export default function Chatbot() {
                         </button>
                       ))}
                     </div>
-
                   </div>
                 )}
-
               </div>
+
+              {/* AUTO-SCROLL TARGET */}
+
+              <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
+            {/* INPUT */}
+
             <form
               onSubmit={(event) => {
                 event.preventDefault();
@@ -343,9 +809,12 @@ export default function Chatbot() {
               <input
                 type="text"
                 value={message}
-                onChange={(event) => setMessage(event.target.value)}
+                onChange={(event) =>
+                  setMessage(event.target.value)
+                }
                 placeholder="Ask about Einnar..."
                 className="min-w-0 flex-1 bg-transparent px-4 py-4 text-sm text-black outline-none placeholder:text-black/25"
+                aria-label="Ask the portfolio assistant"
               />
 
               <button
@@ -353,14 +822,12 @@ export default function Chatbot() {
                 className="flex w-14 items-center justify-center border-l border-black/10 text-[#e87524] transition-colors hover:bg-[#e87524] hover:text-white"
                 aria-label="Send message"
               >
-                <Send
-                  size={16}
-                  strokeWidth={1.4}
-                />
+                <Send size={16} strokeWidth={1.4} />
               </button>
             </form>
 
-            {/* Footer */}
+            {/* FOOTER */}
+
             <div className="flex items-center justify-between border-t border-black/10 px-4 py-2">
               <span className="font-mono text-[7px] uppercase tracking-[0.18em] text-black/25">
                 Engineering With Purpose
