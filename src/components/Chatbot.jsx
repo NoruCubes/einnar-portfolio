@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useEffect, useRef} from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowUpRight,
@@ -523,6 +524,8 @@ export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
 
+  const messagesEndRef = useRef(null);
+
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -532,6 +535,11 @@ export default function Chatbot() {
     },
   ]);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages, isOpen]);
   /* ----------------------------------------
      NAVIGATION
   ---------------------------------------- */
@@ -778,7 +786,8 @@ export default function Chatbot() {
               </div>
 
               {/* AUTO-SCROLL TARGET */}
-
+                
+                
               <div ref={messagesEndRef} />
             </div>
 
@@ -806,7 +815,7 @@ export default function Chatbot() {
                 type="submit"
                 className="flex w-14 items-center justify-center border-l border-black/10 text-[#e87524] transition-colors hover:bg-[#e87524] hover:text-white"
                 aria-label="Send message"
-              >git 
+              >
                 <Send size={16} strokeWidth={1.4} />
               </button>
             </form>
