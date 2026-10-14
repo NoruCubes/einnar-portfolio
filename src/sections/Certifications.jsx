@@ -9,6 +9,8 @@ const certifications = [
     type: "Training",
     description:
       "Training covering construction estimating, quantity take-off, Excel integration, project scheduling, and construction cost management.",
+    date: "August 2026",
+    provider: "MST Connect PH",
     certificateUrl: "/certificates/planswift-primavera.pdf",
   },
   {
@@ -17,7 +19,8 @@ const certifications = [
     type: "Training",
     description:
       "Training focused on construction estimating workflows including roofing estimation, digital plan analysis, material quantification, and labor costing.",
-    certificateUrl: "",
+    provider: "SmartSourcing USA",
+    certificateUrl: "/certificates/smartsourcing_usa.pdf",
   },
   {
     number: "03",

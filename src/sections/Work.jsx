@@ -43,14 +43,6 @@ const workItems = [
       "Created social media content and visual materials to communicate information, engage audiences, and strengthen online presence.",
     category: "Design",
   },
-  {
-    number: "06",
-    title: "PlanSwift & Primavera",
-    subtitle: "Project Estimation & Scheduling",
-    description:
-      "Completed training covering construction estimating, quantity take-off, Excel integration, project scheduling, and construction cost management.",
-    category: "Training",
-  },
 ];
 
 export default function Work() {
